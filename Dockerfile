@@ -1,11 +1,20 @@
-# Usar una imagen base de Nginx
-FROM nginx:alpine
+# Define la imagen base
+FROM node:14
 
-# Copiar el contenido estático al directorio de Nginx
-COPY ./ /usr/share/nginx/html
+# Crea un directorio para la aplicación
+WORKDIR /usr/src/app
 
-# Exponer el puerto 80
-EXPOSE 80
+# Copia el archivo de definición de dependencias
+COPY package*.json ./
 
-# Iniciar Nginx en el contenedor
-CMD ["nginx", "-g", "daemon off;"]
+# Instala las dependencias
+RUN npm install
+
+# Copia el código fuente de la aplicación
+COPY . .
+
+# Expone el puerto en el que la aplicación se ejecutará
+EXPOSE 3000
+
+# Define el comando para ejecutar la aplicación
+CMD [ "node", "server.js" ]
